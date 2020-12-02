@@ -8,6 +8,7 @@ namespace CSharp.Lib {
 
     public static class TupleExtensions {
 
+        // ******************* Day 1 **************************
         public static int? Product(this (int x, int y)? @this) {
             if (@this.HasValue) {
                 var (x, y) = @this.Value;
@@ -17,6 +18,7 @@ namespace CSharp.Lib {
             return null;
         }
 
+        
         public static int? Product(this (int x, int y, int z)? @this) {
             if (@this.HasValue) {
                 var (x, y, z) = @this.Value;
