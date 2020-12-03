@@ -9,23 +9,11 @@ namespace CSharp.Lib {
     public static class TupleExtensions {
 
         // ******************* Day 1 **************************
-        public static int? Product(this (int x, int y)? @this) {
-            if (@this.HasValue) {
-                var (x, y) = @this.Value;
-                return x * y;
-            }
-
-            return null;
-        }
+        public static int Product(this (int x, int y) @this) => 
+            @this.x * @this.y;
 
         
-        public static int? Product(this (int x, int y, int z)? @this) {
-            if (@this.HasValue) {
-                var (x, y, z) = @this.Value;
-                return x * y * z;
-            }
-
-            return null;
-        }
+        public static int Product(this (int x, int y, int z) @this) =>
+            @this.x * @this.y * @this.z;
     }
 }
