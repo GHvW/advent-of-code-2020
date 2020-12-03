@@ -6,7 +6,7 @@ using CSharp.Lib;
 
 Console.WriteLine("Hello Advent of Code 2020!");
 
-var path = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\input.txt";
+var path = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-1-input.txt";
 
 // ************ Day 1 ***************
 //var result =

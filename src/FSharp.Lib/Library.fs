@@ -1,5 +1,8 @@
 ﻿namespace FSharp.Lib
 
+open System
+
+
 module Lib =
 
 
@@ -48,5 +51,60 @@ module Lib =
         (findTriple Set.empty 2020) >=> ((fun (x, y, z) -> x * y * z) >> optionPure)
 
     // ********************** End Day 1 *************************************************
+
+
+    // *********************** Day 2 *************************************
+    type PasswordData =
+        { First: int
+          Second: int 
+          Character: char
+          Password: string }
+
+    let parseLine (line : string) : Option<PasswordData> =
+        try
+            let result = line.Split(" ") 
+            let bounds = result.[0].Split("-")
+            let character = result.[1].ToCharArray()
+            let password = result.[2]
+
+            Some({ First = Int32.Parse(bounds.[0]);
+                   Second = Int32.Parse(bounds.[1]);
+                   Character = character.[0];
+                   Password = password })
+        with
+        | _ -> None
+
+
+    let isWrongValidPassword (item : PasswordData) : bool =
+        let count = 
+            item.Password
+            |> Seq.filter (fun character -> character = item.Character)
+            |> Seq.length
+
+        count >= item.First && count <= item.Second
+            
+
+    let wrongValidPasswordCount lines =
+        lines
+        |> Seq.choose parseLine
+        |> Seq.filter isWrongValidPassword
+        |> Seq.length
+
+
+    let isValidPassword (data : PasswordData) : bool =
+        try
+            let f = data.First - 1
+            let s = data.Second - 1
+            let firstEq = data.Password.[f] = data.Character
+            let secondEq = data.Password.[s] = data.Character
+            (firstEq || secondEq) && (not (firstEq && secondEq))
+        with
+        | _ -> false
+
+
+    let validPasswordCount : seq<string> -> int =
+        Seq.choose parseLine
+        >> Seq.filter isValidPassword
+        >> Seq.length
 
 
