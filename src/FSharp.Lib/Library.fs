@@ -142,6 +142,7 @@ module Lib =
                 
         loop 0 (0, 0)
 
+
     let treeCountsProduct (slopes : List<int * int>) (map : char[][]) : UInt64 =
         slopes
         |> Seq.map (fun it -> encounteredTreesCount it map)
