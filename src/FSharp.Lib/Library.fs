@@ -108,3 +108,42 @@ module Lib =
         >> Seq.length
 
 
+    // ******************** Day 3 **********************
+    let parseMap (lines : seq<string>) : char[][] =
+        lines
+        |> Seq.map (fun line -> line.ToCharArray())
+        |> Seq.toArray
+
+
+    let nextLocation (width : int) (x, y) (currentX, currentY) : int * int =
+        let wrap = (currentX + x) - width
+
+        let newXPosition = 
+            if wrap < 0 then
+                currentX + x
+            else
+                wrap
+
+        (newXPosition, currentY + y)
+        
+
+    let encounteredTreesCount ((x, y) : int * int) (map : char[][]) : int =
+        let findNextLocation = nextLocation (map.[0].Length) (x, y)
+        let rec loop count (currentX, currentY) =
+            if currentY > map.Length - 1 then
+                count
+            else
+                let newCount = 
+                    if map.[currentY].[currentX] = '#' then 
+                        count + 1 
+                    else 
+                        count
+                loop newCount (findNextLocation (currentX, currentY))
+                
+        loop 0 (0, 0)
+
+    let treeCountsProduct (slopes : List<int * int>) (map : char[][]) : UInt64 =
+        slopes
+        |> Seq.map (fun it -> encounteredTreesCount it map)
+        |> Seq.fold (fun total next -> total * (uint64 next)) 1UL
+        

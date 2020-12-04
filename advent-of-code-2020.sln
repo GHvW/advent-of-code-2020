@@ -13,8 +13,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FSharp.Console", "src\FShar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D71FA8CE-7F27-4066-B858-1182D9C9CEEF}"
 	ProjectSection(SolutionItems) = preProject
+		day-1-input.txt = day-1-input.txt
 		day-2-input.txt = day-2-input.txt
-		input.txt = input.txt
+		day-3-input.txt = day-3-input.txt
 		README.md = README.md
 	EndProjectSection
 EndProject
