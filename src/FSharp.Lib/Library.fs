@@ -172,7 +172,7 @@ module Lib =
             if data.Length = 8 then
                 validator data
             else if data.Length = 7 then
-                let hasCID =
+                let hasCID = // this could be better
                     data
                     |> Seq.exists (fun [|field; _|] -> field = "cid")
 
