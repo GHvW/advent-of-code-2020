@@ -9,7 +9,7 @@ module Lib =
     let uncurry2 f (x, y) = f x y
 
             
-    let optionPure x = Some x
+    let optionPure x = Some x // Option.op_Implicit instead?
 
 
     let (>=>) f g arg =
@@ -148,3 +148,114 @@ module Lib =
         |> Seq.map (fun it -> encounteredTreesCount it map)
         |> Seq.fold (fun total next -> total * (uint64 next)) 1UL
         
+
+    // ***************** Day 4 ***********************************
+    let parseData (lines : seq<string>) : List<List<string[]>> =
+        lines
+        |> Seq.fold (fun result line -> 
+            match line with
+            | "" -> []::result
+            | _ ->
+                let newHead = line::(List.head result)
+                newHead::(List.tail result)) [[]]
+        |> List.map (fun list ->
+            list
+            |> List.collect (fun line -> 
+                line.Trim().Split(" ")
+                |> Array.map (fun item -> item.Split(":"))
+                |> Array.toList))
+
+
+    let validatePassports (validator : List<string[]> -> Option<List<string[]>>) (passportInfos : List<List<string[]>>) =
+        passportInfos
+        |> Seq.choose (fun data ->
+            if data.Length = 8 then
+                validator data
+            else if data.Length = 7 then
+                let hasCID =
+                    data
+                    |> Seq.exists (fun [|field; _|] -> field = "cid")
+
+                if hasCID then 
+                    None 
+                else 
+                    validator data
+            else
+                None)
+
+
+    let validItem (min, max) num = 
+        num >= min && num <= max
+
+
+    let numeric = validItem ('0', '9')
+
+
+    let validGroup group item = 
+        Set.contains item group
+        
+
+    let validEyeColor = validGroup (Set.ofList ["amb"; "blu"; "brn"; "gry"; "grn"; "hzl"; "oth";])
+
+
+    let validBirthYear = validItem (1920, 2002)
+
+
+    let validIssueYear = validItem (2010, 2020)
+
+
+    let validExpirationYear = validItem (2020, 2030)
+
+
+    let validHairColor hairColor =
+        match Seq.head hairColor with
+        | '#' ->
+            Seq.tail hairColor
+            |> Seq.forall (fun c -> (numeric c) || (validItem ('a', 'f') c))
+        | _ -> false
+
+
+    let validPID (pid : string) : bool =
+        if pid.Length <> 9 then
+            false
+        else
+            pid 
+            |> Seq.forall numeric
+
+
+    let splitHeight (height : string) =
+        try
+            let i = 
+                height 
+                |> Seq.findIndex (fun c -> not (numeric c))
+
+            (height.[..i - 1], height.[i..])
+        with
+        | _ -> ("", "")
+
+
+    let validHeight measure =
+        match measure with
+        | (height, "cm") -> 
+            validItem (150, 193) (Int32.Parse(height))
+        | (height, "in") ->
+            validItem (59, 76) (Int32.Parse(height))
+        | _ -> false
+
+
+    let passportValidator (data : List<string[]>) =
+        let isValid =
+            data
+            |> Seq.forall (fun field ->
+                match field with
+                | [|"pid"; pid|] -> validPID pid
+                | [|"byr"; birthYear |] -> validBirthYear (Int32.Parse(birthYear))
+                | [|"iyr"; issueYear |] -> validIssueYear (Int32.Parse(issueYear))
+                | [|"eyr"; expirationYear |] -> validExpirationYear (Int32.Parse(expirationYear))
+                | [|"hgt"; height |] -> (splitHeight >> validHeight) height
+                | [|"hcl"; hairColor |] -> validHairColor hairColor
+                | [|"ecl"; eyeColor |] -> validEyeColor eyeColor
+                | [|"cid"; _ |] -> true
+                | _ -> false)
+
+        if isValid then Some(data) else None

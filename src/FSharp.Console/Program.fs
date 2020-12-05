@@ -12,6 +12,7 @@ let main argv =
     let path1 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-1-input.txt"
     let path2 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-2-input.txt"
     let path3 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-3-input.txt"
+    let path4 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-4-input.txt"
 
     // ******* Day 1 *********
     // File.ReadLines path1
@@ -44,5 +45,18 @@ let main argv =
     |> parseMap
     |> treeCountsProduct [(1, 1); (3, 1); (5, 1); (7, 1); (1, 2)]
     |> printfn "Day 3.2: %A"
+
+    // *************** Day 4 *****************
+    File.ReadLines path4
+    |> parseData
+    |> validatePassports (Option.op_Implicit)
+    |> Seq.length
+    |> printfn "Day 4.1: %A"
+
+    File.ReadLines path4
+    |> parseData
+    |> validatePassports passportValidator
+    |> Seq.length
+    |> printfn "Day 4.2: %A"
 
     0 // return an integer exit code
