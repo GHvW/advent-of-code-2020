@@ -6,6 +6,7 @@ using CSharp.Lib;
 using CSharp.Lib.Day2;
 using CSharp.Lib.Day3;
 using CSharp.Lib.Day4;
+using CSharp.Lib.Day5;
 
 Console.WriteLine("Hello Advent of Code 2020!");
 
@@ -13,6 +14,7 @@ var path = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-1-input.txt";
 var path2 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-2-input.txt";
 var path3 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-3-input.txt";
 var path4 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-4-input.txt";
+var path5 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-5-input.txt";
 
 // ************ Day 1 ***************
 var day1_1 =
@@ -134,3 +136,63 @@ var day4_2 =
         .Count();
 
 Console.WriteLine($"Day 4.2: {day4_2}");
+
+
+// ************ Day 5 ******************
+var day5_1 =
+    File.ReadLines(path5)
+        .Select(Seat.CalculateSeatId)
+        .Max();
+
+Console.WriteLine($"Day 5.1: {day5_1}");
+
+// ugly, just dont look, skip to day 6+. hopefully it will be better. I didn't feel like refactoring
+var (list, ids) =
+    File.ReadLines(path5)
+        .Aggregate((new HashSet<double>[128], new HashSet<double>()), (result, next) => { // 128 total rows = row # 0 - 127
+            var (list, ids) = result;
+            var row = Convert.ToInt32(Seat.Row(next[..7]));
+            var column = Convert.ToInt32(Seat.Column(next[7..]));
+
+            if (list[row] == null) {
+                list[row] = new() { column };
+                ids.Add(row * 8 + column);
+                return (list, ids);
+            }
+
+            list[row].Add(column);
+            ids.Add(row * 8 + column);
+
+            return (list, ids);
+        });
+
+Func<HashSet<double>[], HashSet<double>, double> findSeat = (seatlist, seatids) =>
+    seatlist
+        .Zip(Enumerable.Range(0, 127))
+        .Where(x => x.First.Count != 8)
+        .Select(x => {
+            var (row, rowNumber) = x;
+            return ValidSeat(row, seatids, rowNumber);
+
+            static double ValidSeat(HashSet<double> row, HashSet<double> seatids_, int rowNumber) {
+                var seatColumn =
+                    new HashSet<double>() { 0, 1, 2, 3, 4, 5, 6, 7 }
+                        .Except(row)
+                        .First();
+
+                var seatId = rowNumber * 8 + seatColumn;
+                if (seatids_.Contains(seatId + 1) && seatids_.Contains(seatId - 1)) {
+                    return seatId;
+                }
+
+                return 0;
+            };
+        })
+        .Where(x => x != 0)
+        .First(); 
+
+var day5_2 = findSeat(list, ids);
+
+Console.WriteLine($"Day 5.2: {day5_2}");
+
+Console.WriteLine("End");
