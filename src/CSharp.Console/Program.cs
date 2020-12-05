@@ -92,7 +92,7 @@ var day4_1 =
                 })
                 .ToList();
         })
-        .Where(Validators.ValidBasePassport(item => true))
+        .Where(Validators.ValidPassport(item => true))
         .Count();
 
 Console.WriteLine($"Day 4.1: {day4_1}");
@@ -121,7 +121,16 @@ var day4_2 =
                 })
                 .ToList();
         })
-        .Where(Validators.ValidBasePassport(item => true))
+        .Where(Validators.ValidPassport(
+            Validators.PassportItem(
+                eyr: Validators.ExpirationYear(),
+                byr: Validators.BirthYear(),
+                iyr: Validators.IssueYear(),
+                PID: Validators.PID,
+                hgt: Validators.SplitHeight().Compose(Validators.Height),
+                hcl: Validators.HairColor,
+                ecl: Validators.EyeColor)
+        ))
         .Count();
 
 Console.WriteLine($"Day 4.2: {day4_2}");
