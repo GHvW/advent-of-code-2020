@@ -14,6 +14,7 @@ let main argv =
     let path3 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-3-input.txt"
     let path4 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-4-input.txt"
     let path5 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-5-input.txt"
+    let path6 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-6-input.txt"
 
     // ******* Day 1 *********
     // File.ReadLines path1
@@ -67,5 +68,25 @@ let main argv =
     |> printfn "Day 5.1: %A"
 
     // ****************** Day 6 **********************
+    File.ReadLines path6
+    |> Seq.fold (fun result next ->
+        if next = "" then
+            []::result
+        else
+            match result with
+            | x::xs -> (next::x)::xs) [[]]
+    |> Seq.map uniqueAnswers
+    |> Seq.sumBy (Set.count)
+    |> printfn "Day 6.1: %A"
 
+    File.ReadLines path6
+    |> Seq.fold (fun result next ->
+        if next = "" then
+            []::result
+        else
+            match result with
+            | x::xs -> (next::x)::xs) [[]]
+    |> Seq.map matchingAnswers
+    |> Seq.sumBy (Set.count)
+    |> printfn "Day 6.2: %A"
     0 // return an integer exit code

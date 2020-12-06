@@ -287,4 +287,17 @@ module Lib =
         let row' = row spacePartition.[..7 - 1]
         let column' = column spacePartition.[7..]
         row' * 8.0 + column'
+
     // ***************** Day 6 ***************************
+    let uniqueAnswers group =
+        group
+        |> Seq.fold (fun result answer ->
+            answer
+            |> Seq.fold (fun result' c -> Set.add c result') result) Set.empty
+
+    let matchingAnswers group =
+        group
+        |> Seq.map (fun answer ->
+            answer
+            |> Seq.fold (fun result c -> Set.add c result) Set.empty)
+        |> Seq.reduce (fun result set -> Set.intersect set result)
