@@ -262,3 +262,29 @@ module Lib =
 
 
     // ***************** Day 5 ****************************
+    let nextPosition upperChar id ((min, max) : double * double) : double * double =
+        let difference = max - min
+        if id = upperChar then
+            if difference = 1.0 then
+                (max, max)
+            else
+                (min + (Math.Round (difference / 2.0)), max)
+        else
+            (min, min + Math.Truncate(difference / 2.0))
+
+
+    let row rowPartition =
+        rowPartition
+        |> Seq.fold (fun result c -> nextPosition 'B' c result) (0.0, 127.0)
+        |> fst
+
+    let column columnPartition =
+        columnPartition
+        |> Seq.fold (fun result c -> nextPosition 'R' c result) (0.0, 7.0)
+        |> fst
+
+    let calcSeatId (spacePartition : string) : double =
+        let row' = row spacePartition.[..7 - 1]
+        let column' = column spacePartition.[7..]
+        row' * 8.0 + column'
+    // ***************** Day 6 ***************************
