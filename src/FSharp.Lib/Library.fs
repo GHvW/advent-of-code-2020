@@ -278,15 +278,18 @@ module Lib =
         |> Seq.fold (fun result c -> nextPosition 'B' c result) (0.0, 127.0)
         |> fst
 
+
     let column columnPartition =
         columnPartition
         |> Seq.fold (fun result c -> nextPosition 'R' c result) (0.0, 7.0)
         |> fst
 
+
     let calcSeatId (spacePartition : string) : double =
         let row' = row spacePartition.[..7 - 1]
         let column' = column spacePartition.[7..]
         row' * 8.0 + column'
+
 
     // ***************** Day 6 ***************************
     let uniqueAnswers group =
@@ -295,9 +298,28 @@ module Lib =
             answer
             |> Seq.fold (fun result' c -> Set.add c result') result) Set.empty
 
+
     let matchingAnswers group =
         group
         |> Seq.map (fun answer ->
             answer
             |> Seq.fold (fun result c -> Set.add c result) Set.empty)
         |> Seq.reduce (fun result set -> Set.intersect set result)
+
+    // *************** Day 7 *************************
+    let parseBagNode (line : string) =
+        let kvs = line.Split(" contain ")
+        //|> Seq.zip (seq { 0 .. line.Length })
+        let keyArr = kvs.[0].Split(" ");
+        let valsArr = kvs.[1].Split(", ")
+        let key = (keyArr.[0], keyArr.[1])
+        let vs =
+            valsArr
+            |> Seq.map (fun line -> 
+                line.Split(" ")
+                |> Seq.filter (fun word -> word <> "bags" && word <> "bag" && word <> "bag." && word <> "bags.") 
+                |> Seq.toList)
+            |> Seq.toList
+
+        (key, vs)
+
