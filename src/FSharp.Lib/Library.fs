@@ -315,11 +315,46 @@ module Lib =
         let key = (keyArr.[0], keyArr.[1])
         let vs =
             valsArr
-            |> Seq.map (fun line -> 
-                line.Split(" ")
-                |> Seq.filter (fun word -> word <> "bags" && word <> "bag" && word <> "bag." && word <> "bags.") 
-                |> Seq.toList)
-            |> Seq.toList
+            |> Seq.choose (fun line -> 
+                let child = 
+                    line.Split(" ")
+                    |> Seq.filter (fun word -> word <> "bags" && word <> "bag" && word <> "bag." && word <> "bags.") 
+                    |> Seq.toArray
+
+                if child.[0] = "no" then
+                    None
+                else
+                    Some((child.[1], child.[2]), child.[0]))
+            |> Map.ofSeq
 
         (key, vs)
 
+
+    let rec dfs visited stack adjacency : seq<string * string> = seq {
+        match stack with
+        | [] -> ()
+        | x::xs ->
+            yield x
+
+            let (visited', stack') =
+                Map.find x adjacency
+                |> Map.fold (fun (v, s) k _ -> 
+                    if Set.contains k visited then
+                        (v, s)
+                    else
+                        let v' = Set.add k v
+                        let s' = k::s
+                        (v', s')) (visited, xs)
+
+            yield! dfs visited' stack' adjacency }
+
+        
+    let connectedToGold adjacency =
+        adjacency
+        |> Map.filter (fun k _ -> k <> ("shiny", "gold"))
+        |> Map.map (fun k _ ->
+            dfs (Set.ofList [k]) [k] adjacency
+            |> Seq.contains ("shiny", "gold")) 
+        |> Seq.fold (fun sum kv -> if kv.Value = true then sum + 1 else sum) 0
+        
+        

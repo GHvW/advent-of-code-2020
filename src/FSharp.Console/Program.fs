@@ -95,6 +95,9 @@ let main argv =
     // ************* Day 7 ******************
     File.ReadLines path7
     |> Seq.map parseBagNode
+    |> Map.ofSeq
+    |> connectedToGold
     |> printfn "Day 7.1 %A"
+    //|> Seq.iter (printfn "%A")
 
     0 // return an integer exit code
