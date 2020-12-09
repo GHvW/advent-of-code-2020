@@ -324,7 +324,7 @@ module Lib =
                 if child.[0] = "no" then
                     None
                 else
-                    Some((child.[1], child.[2]), child.[0]))
+                    Some((child.[1], child.[2]), Int32.Parse(child.[0])))
             |> Map.ofSeq
 
         (key, vs)
@@ -349,12 +349,31 @@ module Lib =
             yield! dfs visited' stack' adjacency }
 
         
+    // make this better
     let connectedToGold adjacency =
         adjacency
-        |> Map.filter (fun k _ -> k <> ("shiny", "gold"))
-        |> Map.map (fun k _ ->
+        |> Map.toSeq
+        |> Seq.filter (fun (k, _) -> k <> ("shiny", "gold"))
+        |> Seq.map (fun (k, _) ->
             dfs (Set.ofList [k]) [k] adjacency
             |> Seq.contains ("shiny", "gold")) 
-        |> Seq.fold (fun sum kv -> if kv.Value = true then sum + 1 else sum) 0
+        |> Seq.fold (fun sum b -> if b = true then sum + 1 else sum) 0
+
+
+
+    let rec totalBags (multiplier : int) (bag : string * string) (adjacency : Map<string * string, Map<string * string, int>>) : int =
+        Map.find bag adjacency
+        |> Map.toSeq
+        |> Seq.fold (fun total (k, v) ->
+            total + totalBags (multiplier * v) k adjacency) multiplier
+
+
+    let bagsInShinyGold adjacency =
+        Map.find ("shiny", "gold") adjacency
+        |> Map.toSeq
+        |> Seq.map (fun (k, v) -> totalBags v k adjacency)
+        |> Seq.sum
+
+
         
         
