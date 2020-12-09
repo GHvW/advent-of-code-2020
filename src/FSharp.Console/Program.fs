@@ -16,27 +16,27 @@ let main argv =
     let path5 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-5-input.txt"
     let path6 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-6-input.txt"
     let path7 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-7-input.txt"
+    let path8 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-8-input.txt"
 
     // ******* Day 1 *********
-    // File.ReadLines path1
-    // |> Seq.map Int32.Parse
-    // |> find2020Product
-    // |> Option.iter (printfn "%A")
+    File.ReadLines path1
+    |> Seq.map Int32.Parse
+    |> find2020Product
+    |> Option.iter (printfn "%A")
 
-    //File.ReadLines path1
-    //|> Seq.map Int32.Parse
-    //|> find2020TripleProduct
-    //|> Option.iter (printfn "Day 1.2: %A")
-
+    File.ReadLines path1
+    |> Seq.map Int32.Parse
+    |> find2020TripleProduct
+    |> Option.iter (printfn "Day 1.2: %A")
 
     // ******* Day 2 *********
-    //File.ReadLines path2
-    //|> wrongValidPasswordCount
-    //|> printfn "Day 2.1: %A"
+    File.ReadLines path2
+    |> wrongValidPasswordCount
+    |> printfn "Day 2.1: %A"
 
-    //File.ReadLines path2
-    //|> validPasswordCount
-    //|> printfn "Day 2.2: %A"
+    File.ReadLines path2
+    |> validPasswordCount
+    |> printfn "Day 2.2: %A"
 
     // ********* Day 3 ***********
     File.ReadLines path3
@@ -104,5 +104,36 @@ let main argv =
     |> Map.ofSeq
     |> bagsInShinyGold
     |> printfn "Day 7.2 %A"
+
+    // ********* Day 8 ************
+    File.ReadLines path8
+    //["nop +0";
+    //"acc +1";
+    //"jmp +4";
+    //"acc +3";
+    //"jmp -3";
+    //"acc -99";
+    //"acc +1";
+    //"jmp -4";
+    //"acc +6"]
+    |> Seq.map parseInstruction
+    |> Seq.toArray
+    |> runProgram
+    |> printfn "Day 8.1 %A"
+
+    File.ReadLines path8
+    //["nop +0";
+    //"acc +1";
+    //"jmp +4";
+    //"acc +3";
+    //"jmp -3";
+    //"acc -99";
+    //"acc +1";
+    //"jmp -4";
+    //"acc +6"]
+    |> Seq.map parseInstruction
+    |> Seq.toArray
+    |> runProgramHealer
+    |> printfn "Day 8.2 %A"
 
     0 // return an integer exit code

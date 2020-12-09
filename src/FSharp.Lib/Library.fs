@@ -375,5 +375,80 @@ module Lib =
         |> Seq.sum
 
 
+    // ************** Day 8 **********************
+    let parseInstruction (instruction : string) =
+        let words = instruction.Split(" ")
+        let positiveNegative = words.[1].[0]
+        let n = words.[1].[1..]
+        (words.[0], (positiveNegative, Int32.Parse(n)))
+
+    // part 1
+    let rec runProgramWithTrace instructionsRun pc (index : int) (program : (string * (char * int))[]) : int =
+        if Set.contains index instructionsRun then
+            pc
+        else
+            let instructionsRun' = Set.add index instructionsRun
+            match program.[index] with
+            | ("acc", x) -> 
+                match x with
+                | ('+', n) -> runProgramWithTrace instructionsRun' (pc + n) (index + 1) program
+                | (_, n) -> runProgramWithTrace instructionsRun' (pc - n) (index + 1) program
+            | ("jmp", x) ->
+                match x with
+                | ('+', n) -> runProgramWithTrace instructionsRun' pc (index + n) program
+                | (_, n) ->  runProgramWithTrace instructionsRun' pc (index - n) program // ('-', n)
+            | _ -> runProgramWithTrace instructionsRun' pc (index + 1) program // (nop, _) TODO make a DU if time
+
+            
+    let runProgram = runProgramWithTrace Set.empty 0 0
         
+
+    // part 2
+    let rec runProgramWithTrace2 instructionsRun pc (index : int) (program : (string * (char * int))[]) : Option<int> =
+        if Set.contains index instructionsRun then
+            None
+        else if index > Array.length program then // + 1 - 1 = 0
+            None
+        else if index = Array.length program then
+            Some(pc)
+        else
+            let instructionsRun' = Set.add index instructionsRun
+            match program.[index] with
+            | ("acc", x) -> 
+                match x with
+                | ('+', n) -> runProgramWithTrace2 instructionsRun' (pc + n) (index + 1) program
+                | (_, n) -> runProgramWithTrace2 instructionsRun' (pc - n) (index + 1) program
+            | ("jmp", x) ->
+                match x with
+                | ('+', n) -> runProgramWithTrace2 instructionsRun' pc (index + n) program
+                | (_, n) ->  runProgramWithTrace2 instructionsRun' pc (index - n) program // ('-', n)
+            | _ -> runProgramWithTrace2 instructionsRun' pc (index + 1) program // (nop, _) TODO make a DU if time
+
+
+    let rec runProgramWithHeals instructionsRun pc (index : int) (program : (string * (char * int))[]) : int =
+        let set = Set.add index instructionsRun
+        match program.[index] with
+        | ("acc", x) -> 
+            match x with
+            | ('+', n) -> runProgramWithHeals set (pc + n) (index + 1) program
+            | (_, n) -> runProgramWithHeals set (pc - n) (index + 1) program
+        | ("jmp", x) ->
+            match runProgramWithTrace2 set pc (index + 1) program with
+            | None -> 
+                match x with
+                | ('+', n) -> runProgramWithHeals set pc (index + n) program
+                | (_, n) -> runProgramWithHeals set pc (index - n) program
+            | Some result -> result
+        | (_, x) ->
+            match x with
+            | ('+', n) ->
+                match runProgramWithTrace2 set pc (index + n) program with
+                | None -> runProgramWithHeals set pc (index + 1) program
+                | Some result -> result
+            | (_, n) -> 
+                match runProgramWithTrace2 set pc (index - n) program with
+                | None -> runProgramWithHeals set pc (index + 1) program
+                | Some result -> result
         
+
+    let runProgramHealer = runProgramWithHeals Set.empty 0 0
