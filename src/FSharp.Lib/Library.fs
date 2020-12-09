@@ -1,6 +1,8 @@
 ﻿namespace FSharp.Lib
 
 open System
+open System.Collections.Immutable
+open System.Linq
 
 
 module Lib =
@@ -403,7 +405,7 @@ module Lib =
     let runProgram = runProgramWithTrace Set.empty 0 0
         
 
-    // part 2
+    // part 2 - TODO fix this up?
     let rec runProgramWithTrace2 instructionsRun pc (index : int) (program : (string * (char * int))[]) : Option<int> =
         if Set.contains index instructionsRun then
             None
@@ -452,3 +454,28 @@ module Lib =
         
 
     let runProgramHealer = runProgramWithHeals Set.empty 0 0
+
+    // ******************** Day 9 **********************
+    let checkNoAdd consider (consideration : ImmutableQueue<int>) n : Option<int> * ImmutableQueue<int> =
+        if (consideration :> System.Collections.Generic.IEnumerable<int>).Count() = consider then
+            let result = 
+                if Seq.exists (fun n' -> Seq.contains (n - n') consideration) consideration then
+                    None
+                else
+                    Some(n)
+
+            let popped = consideration.Dequeue()
+            (result, popped.Enqueue(n))
+        else
+            (None, consideration.Enqueue(n))
+            
+
+    let rec findNoAdd consider queue ns =
+        if Seq.isEmpty (Seq.tail ns) then
+            fst (checkNoAdd consider queue (Seq.head ns))
+        else
+            match checkNoAdd consider queue (Seq.head ns) with
+            | (None, queue') -> findNoAdd consider queue' (Seq.tail ns)
+            | (value, _) -> value
+        
+        

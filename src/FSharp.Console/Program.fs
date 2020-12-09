@@ -3,6 +3,7 @@
 open System
 open System.IO
 open FSharp.Lib.Lib
+open System.Collections.Immutable
 
 
 [<EntryPoint>]
@@ -17,6 +18,7 @@ let main argv =
     let path6 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-6-input.txt"
     let path7 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-7-input.txt"
     let path8 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-8-input.txt"
+    let path9 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-9-input.txt"
 
     // ******* Day 1 *********
     File.ReadLines path1
@@ -107,33 +109,42 @@ let main argv =
 
     // ********* Day 8 ************
     File.ReadLines path8
-    //["nop +0";
-    //"acc +1";
-    //"jmp +4";
-    //"acc +3";
-    //"jmp -3";
-    //"acc -99";
-    //"acc +1";
-    //"jmp -4";
-    //"acc +6"]
     |> Seq.map parseInstruction
     |> Seq.toArray
     |> runProgram
     |> printfn "Day 8.1 %A"
 
     File.ReadLines path8
-    //["nop +0";
-    //"acc +1";
-    //"jmp +4";
-    //"acc +3";
-    //"jmp -3";
-    //"acc -99";
-    //"acc +1";
-    //"jmp -4";
-    //"acc +6"]
     |> Seq.map parseInstruction
     |> Seq.toArray
     |> runProgramHealer
     |> printfn "Day 8.2 %A"
+
+    // ************ Day 9 ***********
+    File.ReadLines path9
+    //[35
+    // 20
+    // 15
+    // 25
+    // 47
+    // 40
+    // 62
+    // 55
+    // 65
+    // 95
+    // 102
+    // 117
+    // 150
+    // 182
+    // 127
+    // 219
+    // 299
+    // 277
+    // 309
+    // 576]
+    |> Seq.map (Int32.Parse)
+    |> findNoAdd 25 ImmutableQueue.Empty
+    |> printfn "Day 9.1 %A"
+
 
     0 // return an integer exit code

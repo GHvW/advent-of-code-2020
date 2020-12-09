@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		day-6-input.txt = day-6-input.txt
 		day-7-input.txt = day-7-input.txt
 		day-8-input.txt = day-8-input.txt
+		day-9-input.txt = day-9-input.txt
 		README.md = README.md
 	EndProjectSection
 EndProject

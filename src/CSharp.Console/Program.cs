@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using CSharp.Lib;
@@ -7,6 +8,7 @@ using CSharp.Lib.Day2;
 using CSharp.Lib.Day3;
 using CSharp.Lib.Day4;
 using CSharp.Lib.Day5;
+using CSharp.Lib.Day9;
 
 Console.WriteLine("Hello Advent of Code 2020!");
 
@@ -15,6 +17,7 @@ var path2 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-2-input.txt"
 var path3 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-3-input.txt";
 var path4 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-4-input.txt";
 var path5 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-5-input.txt";
+var path9 = @"C:\Users\ghvw\projects\dotnet\advent-of-code-2020\day-9-input.txt";
 
 // ************ Day 1 ***************
 var day1_1 =
@@ -194,5 +197,13 @@ Func<HashSet<double>[], HashSet<double>, double> findSeat = (seatlist, seatids) 
 var day5_2 = findSeat(list, ids);
 
 Console.WriteLine($"Day 5.2: {day5_2}");
+
+// ******************* Day 9 *****************
+var day9_1 =
+    File.ReadAllLines(path9)
+        .Select(Int32.Parse)
+        .FindNoAdd(25, ImmutableQueue<int>.Empty);
+
+Console.WriteLine($"Day 9.1: {day9_1}");
 
 Console.WriteLine("End");
