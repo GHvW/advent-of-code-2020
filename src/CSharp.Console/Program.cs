@@ -217,7 +217,8 @@ var num =
 var day9_2 =
         !num.HasValue
             ? null
-            : sequence.FindContiguousSumFor(num.Value)
+            : sequence
+                .FindContiguousSumFor(num.Value)
                 ?.Aggregate((0L, 0L), (result, n) => {
                     var (min, max) = result;
                     if (min == 0 && max == 0) {

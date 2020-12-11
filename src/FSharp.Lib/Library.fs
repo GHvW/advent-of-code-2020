@@ -511,3 +511,9 @@ module Lib =
             >> Option.op_Implicit)
 
 
+    // day 10
+    let minTree ns =
+
+        
+    let parseJoltages ns =
+        
