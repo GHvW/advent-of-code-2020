@@ -456,8 +456,9 @@ module Lib =
     let runProgramHealer = runProgramWithHeals Set.empty 0 0
 
     // ******************** Day 9 **********************
-    let checkNoAdd consider (consideration : ImmutableQueue<int>) n : Option<int> * ImmutableQueue<int> =
-        if (consideration :> System.Collections.Generic.IEnumerable<int>).Count() = consider then
+    // part 1
+    let checkNoAdd consider (consideration : ImmutableQueue<UInt64>) n : Option<UInt64> * ImmutableQueue<UInt64> =
+        if (consideration :> System.Collections.Generic.IEnumerable<UInt64>).Count() = consider then
             let result = 
                 if Seq.exists (fun n' -> Seq.contains (n - n') consideration) consideration then
                     None
@@ -478,4 +479,35 @@ module Lib =
             | (None, queue') -> findNoAdd consider queue' (Seq.tail ns)
             | (value, _) -> value
         
-        
+
+    // part 2
+    let rec checkContiguousSum (list : ImmutableQueue<UInt64>) (ns : seq<UInt64>) (n : UInt64)  : Option<ImmutableQueue<UInt64>> =
+        let currentTotal = Seq.sum list
+        if Seq.isEmpty ns then
+            None
+        else if currentTotal = n then
+            Some(list)
+        else if currentTotal > n then
+            checkContiguousSum (list.Dequeue()) ns n
+        else
+            checkContiguousSum (list.Enqueue(Seq.head ns)) (Seq.tail ns) n
+
+
+    let checkSum : seq<UInt64> -> UInt64 -> Option<ImmutableQueue<UInt64>> = checkContiguousSum (ImmutableQueue.Empty)
+
+
+    let findWeakness s =
+        (checkSum s)
+        >=> ((Seq.fold (fun (min, max) n -> 
+               if min = 0UL && max = 0UL then
+                   (n, n)
+               else if n < min then 
+                   (n, max)
+               else if n > max then 
+                   (min, n)
+               else 
+                    (min, max)) (0UL, 0UL)) 
+            >> (uncurry2 (+)) 
+            >> Option.op_Implicit)
+
+

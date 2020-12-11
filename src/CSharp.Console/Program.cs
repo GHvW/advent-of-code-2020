@@ -192,7 +192,7 @@ Func<HashSet<double>[], HashSet<double>, double> findSeat = (seatlist, seatids) 
             };
         })
         .Where(x => x != 0)
-        .First(); 
+        .First();
 
 var day5_2 = findSeat(list, ids);
 
@@ -201,9 +201,38 @@ Console.WriteLine($"Day 5.2: {day5_2}");
 // ******************* Day 9 *****************
 var day9_1 =
     File.ReadAllLines(path9)
-        .Select(Int32.Parse)
-        .FindNoAdd(25, ImmutableQueue<int>.Empty);
+        .Select(long.Parse)
+        .FindNoAdd(25, ImmutableQueue<long>.Empty);
 
 Console.WriteLine($"Day 9.1: {day9_1}");
+
+var sequence =
+    File.ReadAllLines(path9)
+        .Select(long.Parse);
+
+var num =
+    sequence
+        .FindNoAdd(25, ImmutableQueue<long>.Empty);
+
+var day9_2 =
+        !num.HasValue
+            ? null
+            : sequence.FindContiguousSumFor(num.Value)
+                ?.Aggregate((0L, 0L), (result, n) => {
+                    var (min, max) = result;
+                    if (min == 0 && max == 0) {
+                        return (n, n);
+                    } else if (n < min) {
+                        return (n, max);
+                    } else if (n > max) {
+                        return (min, n);
+                    }
+
+                    return result;
+                })
+                .Sum();
+
+
+Console.WriteLine($"Day 9.2: {day9_2}");
 
 Console.WriteLine("End");

@@ -9,9 +9,9 @@ namespace CSharp.Lib.Day9 {
 
     public static class NoAdd {
 
-        public static (int?, ImmutableQueue<int>) CheckNoAdd(int considerCount, ImmutableQueue<int> consideration, int n) {
+        public static (long?, ImmutableQueue<long>) CheckNoAdd(long considerCount, ImmutableQueue<long> consideration, long n) {
             if (consideration.Count() == considerCount) {
-                int? result;
+                long? result;
                 if (consideration.Any(n_ => consideration.Contains(n - n_))) {
                     result = null;
                 } else {
@@ -25,7 +25,7 @@ namespace CSharp.Lib.Day9 {
         }
 
 
-        public static int? FindNoAdd(this IEnumerable<int> @this, int considerationCount, ImmutableQueue<int> queue) {
+        public static long? FindNoAdd(this IEnumerable<long> @this, long considerationCount, ImmutableQueue<long> queue) {
             if (!@this.Skip(1).Any()) {
                 return CheckNoAdd(considerationCount, queue, @this.First()).Item1;
             }

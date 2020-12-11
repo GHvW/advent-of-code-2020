@@ -15,5 +15,10 @@ namespace CSharp.Lib {
         
         public static int Product(this (int x, int y, int z) @this) =>
             @this.x * @this.y * @this.z;
+
+
+        // day 9
+        public static long Sum(this (long x, long y) @this) => 
+            @this.x + @this.y;
     }
 }

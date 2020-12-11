@@ -122,29 +122,17 @@ let main argv =
 
     // ************ Day 9 ***********
     File.ReadLines path9
-    //[35
-    // 20
-    // 15
-    // 25
-    // 47
-    // 40
-    // 62
-    // 55
-    // 65
-    // 95
-    // 102
-    // 117
-    // 150
-    // 182
-    // 127
-    // 219
-    // 299
-    // 277
-    // 309
-    // 576]
-    |> Seq.map (Int32.Parse)
+    |> Seq.map (UInt64.Parse)
     |> findNoAdd 25 ImmutableQueue.Empty
-    |> printfn "Day 9.1 %A"
+    |> Option.iter (printfn "Day 9.1 %A")
 
+
+    let seq =
+        File.ReadLines path9
+        |> Seq.map (UInt64.Parse) 
+
+    findNoAdd 25 ImmutableQueue.Empty seq
+    |> Option.bind (findWeakness seq)
+    |> printfn "Day 9.2 %A"
 
     0 // return an integer exit code
