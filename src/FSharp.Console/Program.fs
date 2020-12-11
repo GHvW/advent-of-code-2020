@@ -137,6 +137,9 @@ let main argv =
     |> printfn "Day 9.2 %A"
 
     // ************** Day 10 ***************
-
+    File.ReadLines path10
+    |> Seq.fold (fun graph n ->
+        let map = Map.add n [] graph
+        ) (Map<int, List<int>>)
 
     0 // return an integer exit code
