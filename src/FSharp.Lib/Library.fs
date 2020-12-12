@@ -332,7 +332,7 @@ module Lib =
         (key, vs)
 
 
-    let rec dfs visited stack adjacency : seq<string * string> = seq {
+    let rec dfs visited stack adjacency = seq {
         match stack with
         | [] -> ()
         | x::xs ->
@@ -512,8 +512,35 @@ module Lib =
 
 
     // day 10
-    let minTree ns =
-
-        
     let parseJoltages ns =
+        let oneTwoThree = [1; 2; 3]
+        ns
+        |> Seq.append (seq { 0 }) // joltage of outlet is 0
+        |> Seq.fold (fun edges n ->
+            oneTwoThree
+            |> Seq.fold (fun edgeList x ->
+                let add = n + x
+                if Set.contains add ns then
+                    (n, (add, x))::edgeList
+                else
+                    edgeList) edges) []
+        
+
+    let rec traverseAdapters next adapters = seq {
+        if not (Map.containsKey next adapters) then
+            ()
+        else
+            let connections = Map.find next adapters
+            let (_, minConnection) = Seq.minBy (fun (_, (_, weight)) -> weight) connections
+            yield minConnection
+
+            yield! traverseAdapters (fst minConnection) adapters 
+    }
+
+
+
+
+
+
+
         

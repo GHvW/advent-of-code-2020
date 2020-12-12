@@ -138,8 +138,105 @@ let main argv =
 
     // ************** Day 10 ***************
     File.ReadLines path10
-    |> Seq.fold (fun graph n ->
-        let map = Map.add n [] graph
-        ) (Map<int, List<int>>)
+    |> Seq.map (Int32.Parse)
+    //[28
+    // 33
+    // 18
+    // 42
+    // 31
+    // 14
+    // 46
+    // 20
+    // 48
+    // 47
+    // 24
+    // 23
+    // 49
+    // 45
+    // 19
+    // 38
+    // 39
+    // 11
+    // 1
+    // 32
+    // 25
+    // 35
+    // 8
+    // 17
+    // 7
+    // 9
+    // 4
+    // 2
+    // 34
+    // 10
+    // 3]
+    |> Set.ofSeq
+    |> parseJoltages
+    |> Seq.groupBy (fun (vertex, _) -> vertex)
+    |> Map.ofSeq
+    |> traverseAdapters 0
+    |> Seq.fold (fun (ones, threes) next ->
+        match next with
+        | (_, 1) -> (ones + 1, threes)
+        | (_, 3) -> (ones, threes + 1)) (0, 1) // start off with one three since our rating is always three higher than our highest joltage
+    |> (uncurry2 (*))
+    |> printfn "Day 10.1 %A"
+
+
+    //File.ReadLines path10
+    //|> Seq.map (Int32.Parse)
+    //[28
+    // 33
+    // 18
+    // 42
+    // 31
+    // 14
+    // 46
+    // 20
+    // 48
+    // 47
+    // 24
+    // 23
+    // 49
+    // 45
+    // 19
+    // 38
+    // 39
+    // 11
+    // 1
+    // 32
+    // 25
+    // 35
+    // 8
+    // 17
+    // 7
+    // 9
+    // 4
+    // 2
+    // 34
+    // 10
+    // 3]
+    [16
+     10
+     15
+     5
+     1
+     11
+     7
+     19
+     6
+     12
+     4]
+    |> Set.ofSeq
+    |> parseJoltages
+    |> Seq.groupBy (fun (vertex, _) -> vertex)
+    |> Seq.fold (fun totals (_, edges) ->
+        edges
+        |> Seq.fold (fun theMap (_, (c, _)) -> 
+            match Map.tryFind c theMap with
+            | None -> Map.add c 1 theMap
+            | Some n -> Map.add c (n + 1) theMap) totals) Map.empty
+    |> Map.fold (fun total _ v -> total * v) 1
+    |> printfn "Day 10.2 %A" 
 
     0 // return an integer exit code
