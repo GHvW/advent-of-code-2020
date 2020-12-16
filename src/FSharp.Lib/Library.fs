@@ -538,9 +538,20 @@ module Lib =
     }
 
 
-
-
-
+    // 2
+    let rec findPermutationCount stack count adjacency =
+        match stack with
+        | [] -> count
+        | x::xs ->
+            let connections = 
+                Map.find x adjacency
+                |> Seq.map (fun (_, (vertex, _)) -> vertex)
+                |> Seq.toList
+            if Seq.isEmpty connections then
+                findPermutationCount xs (count + 1) adjacency
+            else
+                findPermutationCount (List.append connections xs) count adjacency
+        
 
 
         

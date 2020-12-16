@@ -139,37 +139,6 @@ let main argv =
     // ************** Day 10 ***************
     File.ReadLines path10
     |> Seq.map (Int32.Parse)
-    //[28
-    // 33
-    // 18
-    // 42
-    // 31
-    // 14
-    // 46
-    // 20
-    // 48
-    // 47
-    // 24
-    // 23
-    // 49
-    // 45
-    // 19
-    // 38
-    // 39
-    // 11
-    // 1
-    // 32
-    // 25
-    // 35
-    // 8
-    // 17
-    // 7
-    // 9
-    // 4
-    // 2
-    // 34
-    // 10
-    // 3]
     |> Set.ofSeq
     |> parseJoltages
     |> Seq.groupBy (fun (vertex, _) -> vertex)
@@ -230,13 +199,8 @@ let main argv =
     |> Set.ofSeq
     |> parseJoltages
     |> Seq.groupBy (fun (vertex, _) -> vertex)
-    |> Seq.fold (fun totals (_, edges) ->
-        edges
-        |> Seq.fold (fun theMap (_, (c, _)) -> 
-            match Map.tryFind c theMap with
-            | None -> Map.add c 1 theMap
-            | Some n -> Map.add c (n + 1) theMap) totals) Map.empty
-    |> Map.fold (fun total _ v -> total * v) 1
+    |> Map.ofSeq
+    |> findPermutationCount [0] 0
     |> printfn "Day 10.2 %A" 
 
     0 // return an integer exit code
